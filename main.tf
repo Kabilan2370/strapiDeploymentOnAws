@@ -89,7 +89,7 @@ resource "aws_db_subnet_group" "db_subnet" {
 }
 
 # RDS PostgreSql
-resource "aws_rds_cluster" "postgresql" {
+resource "aws_db_instance" "postgresql" {
 
   cluster_identifier      = "aurora-cluster-strapi"
   engine                  = "aurora-postgresql"
@@ -107,6 +107,16 @@ resource "aws_rds_cluster" "postgresql" {
 
 # user data values
 
+data "template_file" "userdata" {
+  template = file("${path.module}/userData.sh")
+
+  vars = {
+    db_host     = aws_db_instance.postgresql.address
+    db_name     = "mydata"
+    db_user     = "strapi"
+    db_password = "strapi6734"
+  }
+}
 
 resource "aws_instance" "strapi-production" {
   ami                    = "ami-0ecb62995f68bb549"
