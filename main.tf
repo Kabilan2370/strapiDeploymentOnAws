@@ -105,6 +105,69 @@ resource "aws_db_instance" "postgresql" {
   vpc_security_group_ids  = [aws_security_group.public_sg.id]
 }
 
+# create a s3 bucket
+resource "aws_s3_bucket" "buckerS3" {
+  bucket = "strapi_s3_bucket_test"
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
+
+# iam role
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2Access"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = {
+    tag-key = "tag-value"
+  }
+}
+# iam role policy
+resource "aws_iam_policy" "ec2_s3_policy" {
+  name = "strapi-ec2-s3-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:*"]
+        Resource = [
+          aws_s3_bucket.strapi_bucket.arn,
+          "${aws_s3_bucket.strapi_bucket.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# attach iam policy to role
+resource "aws_iam_role_policy_attachment" "ec2_s3_attach" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.ec2_s3_policy.arn
+}
+
+# aws instance profile
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "strapi-ec2-profile"
+  role = aws_iam_role.ec2_role.name
+}
+
 # user data values
 
 data "template_file" "userdata" {
@@ -118,12 +181,14 @@ data "template_file" "userdata" {
   }
 }
 
+
 resource "aws_instance" "strapi-production" {
   ami                    = "ami-0ecb62995f68bb549"
   instance_type          = "t3.micro"
   subnet_id              = aws_subnet.pubsub.id
   key_name               = "Connection"
   vpc_security_group_ids = [aws_security_group.public_sg.id]
+  iam_instance_profile   = aws-iam_instance_profile.ec2.profile.name
 
   user_data = data.template_file.userdata.rendered
 
