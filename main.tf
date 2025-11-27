@@ -172,9 +172,9 @@ resource "aws_security_group" "private_sg" {
 # RDS PostgreSql
 resource "aws_db_instance" "postgresql" {
 
-  cluster_identifier      = "aurora-cluster-strapi"
+  cluster_identifier      = "strapi-postgres"
   engine                  = "postgresql"
-  engine-version          =  17
+  engine-version          =  "15.3"
   instance-class          = "db.t3.micro"
   availability_zones      = ["us-east-1a", "us-east-1b", "us-east-1c"]
   database_name           = "mydata"
