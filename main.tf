@@ -171,7 +171,7 @@ resource "aws_security_group" "private_sg" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = [aws_security_group.public_sg.id]
+    security_groups = [aws_security_group.public_sg.id]
   }
 
   tags = {
@@ -182,7 +182,7 @@ resource "aws_security_group" "private_sg" {
 #-------------------------
 # create a s3 bucket
 resource "aws_s3_bucket" "strapi_bucket" {
-  bucket = "strapi_s3_bucket_2811"
+  bucket = "strapi-s3-bucket-2811"
 
   tags = {
     Name        = "My bucket"
@@ -252,7 +252,7 @@ resource "aws_db_subnet_group" "db_subnet" {
 # RDS PostgreSql
 resource "aws_db_instance" "postgresql" {
   identifier              = "strapi-db"
-  engine                  = "postgresql"
+  engine                  = "postgres"
   allocated_storage       = 20
   engine_version          =  "15.3"
   instance_class          = "db.t3.micro"
