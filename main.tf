@@ -126,7 +126,7 @@ resource "aws_route_table" "private_route2" {
 }
 
 # aws subnet association
-resource "aws_route_table_association" "b" {
+resource "aws_route_table_association" "c" {
   subnet_id      = aws_subnet.private_sub2.id
   route_table_id = aws_route_table.private_route2.id
 }
