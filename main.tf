@@ -179,7 +179,7 @@ resource "aws_security_group" "private_sg" {
   }
 }
 
--------------------------
+#-------------------------
 # create a s3 bucket
 resource "aws_s3_bucket" "strapi_bucket" {
   bucket = "strapi_s3_bucket_2811"
@@ -244,7 +244,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_role.name
 }
 
-----------------------------
+#----------------------------
 resource "aws_db_subnet_group" "db_subnet" {
   name       = "strapi-db-subnet"
   subnet_ids = [aws_subnet.private_sub.id, aws_subnet.private_sub2.id]
