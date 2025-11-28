@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = "true"
 
   tags = {
-    Name = "main"
+    Name = "main-vpc"
   }
 }
 
@@ -171,15 +171,7 @@ resource "aws_security_group" "private_sg" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
-  }
-  
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-
+    cidr_blocks = [aws_security_group.public_sg.id]
   }
 
   tags = {
@@ -190,7 +182,7 @@ resource "aws_security_group" "private_sg" {
 -------------------------
 # create a s3 bucket
 resource "aws_s3_bucket" "strapi_bucket" {
-  bucket = "strapi_s3_bucket_test"
+  bucket = "strapi_s3_bucket_2811"
   acl    = "private"
 
   tags = {
@@ -260,7 +252,7 @@ resource "aws_db_subnet_group" "db_subnet" {
 
 # RDS PostgreSql
 resource "aws_db_instance" "postgresql" {
-
+  identifier              = "strapi-db"
   engine                  = "postgresql"
   allocated_storage       = 20
   engine-version          =  "15.3"
@@ -284,6 +276,7 @@ data "template_file" "userdata" {
     db_name     = "mydata"
     db_user     = "strapi"
     db_password = "strapi6734!"
+    s3_bucket   = aws_s3_bucket.strapi_bucket.bucket
   }
 }
 
@@ -293,7 +286,7 @@ resource "aws_instance" "strapi-production" {
   instance_type          = "t3.micro"
   subnet_id              = aws_subnet.pub_sub.id
   key_name               = "Connection"
-  vpc_security_group_ids = [aws_security_group.public_sg.id]
+  vpc_security_group_ids = [aws_security_group.public_sg.id
   iam_instance_profile   = aws-iam_instance_profile.ec2_profile.name
 
   user_data = data.template_file.userdata.rendered
