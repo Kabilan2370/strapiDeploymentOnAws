@@ -21,7 +21,7 @@ resource "aws_subnet" "pub_sub" {
   }
 }
 
-# Private Subnet for postgresql
+# Private Subnet 1 for postgresql
 resource "aws_subnet" "private_sub" {
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.0.3.0/24"
@@ -31,6 +31,18 @@ resource "aws_subnet" "private_sub" {
     Name = "Private_subnet"
   }
 }
+# aws private subnet 2 for postgresql
+
+resource "aws_subnet" "private_sub2" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.4.0/24"
+  availability_zone = "us-east-1c"
+
+  tags = {
+    Name = "Private_subnet2"
+  }
+}
+
 
 # aws internet gatway
 resource "aws_internet_gateway" "gw_strapi" {
@@ -79,7 +91,7 @@ resource "aws_route_table_association" "a" {
 
 # Private route table
 
-resource "aws_route_table" "private_route2" {
+resource "aws_route_table" "private_route1" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -95,6 +107,27 @@ resource "aws_route_table" "private_route2" {
 # aws subnet association
 resource "aws_route_table_association" "b" {
   subnet_id      = aws_subnet.private_sub.id
+  route_table_id = aws_route_table.private_route1.id
+}
+
+# Private route table 2
+
+resource "aws_route_table" "private_route2" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_net.id
+  }
+
+  tags = {
+    Name = "private-route-table2"
+  }
+}
+
+# aws subnet association
+resource "aws_route_table_association" "b" {
+  subnet_id      = aws_subnet.private_sub2.id
   route_table_id = aws_route_table.private_route2.id
 }
 
@@ -137,12 +170,6 @@ resource "aws_security_group" "private_sg" {
   ingress {
     from_port   = 5432
     to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
-  }
-  ingress {
-    from_port   = 22
-    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["10.0.2.0/24"]
   }
@@ -228,22 +255,19 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 ----------------------------
 resource "aws_db_subnet_group" "db_subnet" {
   name       = "strapi-db-subnet"
-  subnet_ids = [aws_subnet.private_sub.id]
+  subnet_ids = [aws_subnet.private_sub.id, aws_subnet.private_sub2.id]
 }
 
 # RDS PostgreSql
 resource "aws_db_instance" "postgresql" {
 
-  cluster_identifier      = "strapi-postgres"
   engine                  = "postgresql"
-  allocated_storage       = "
+  allocated_storage       = 20
   engine-version          =  "15.3"
   instance-class          = "db.t3.micro"
-  availability_zones      = ["us-east-1a", "us-east-1b", "us-east-1c"]
   database_name           = "mydata"
   master_username         = "strapi"
   master_password         = "strapi6734!"
-  publicly_accessible     = true
   skip_final_snapshot     = true
   db_subnet_group_name    = aws_db_subnet_group.db_subnet.name
   vpc_security_group_ids  = [aws_security_group.private_sg.id]
