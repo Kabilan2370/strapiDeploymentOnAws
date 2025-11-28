@@ -55,7 +55,7 @@ resource "aws_internet_gateway" "gw_strapi" {
 
 # Elastic IP
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  domain = true
 }
 
 # NAT gateway for private subnet
@@ -183,7 +183,6 @@ resource "aws_security_group" "private_sg" {
 # create a s3 bucket
 resource "aws_s3_bucket" "strapi_bucket" {
   bucket = "strapi_s3_bucket_2811"
-  acl    = "private"
 
   tags = {
     Name        = "My bucket"
@@ -257,9 +256,8 @@ resource "aws_db_instance" "postgresql" {
   allocated_storage       = 20
   engine-version          =  "15.3"
   instance-class          = "db.t3.micro"
-  database_name           = "mydata"
-  master_username         = "strapi"
-  master_password         = "strapi6734!"
+  username                = "strapi"
+  password                = "strapi6734!"
   skip_final_snapshot     = true
   db_subnet_group_name    = aws_db_subnet_group.db_subnet.name
   vpc_security_group_ids  = [aws_security_group.private_sg.id]
@@ -273,7 +271,6 @@ data "template_file" "userdata" {
 
   vars = {
     db_host     = aws_db_instance.postgresql.address
-    db_name     = "mydata"
     db_user     = "strapi"
     db_password = "strapi6734!"
     s3_bucket   = aws_s3_bucket.strapi_bucket.bucket
@@ -286,8 +283,8 @@ resource "aws_instance" "strapi-production" {
   instance_type          = "t3.micro"
   subnet_id              = aws_subnet.pub_sub.id
   key_name               = "Connection"
-  vpc_security_group_ids = [aws_security_group.public_sg.id
-  iam_instance_profile   = aws-iam_instance_profile.ec2_profile.name
+  vpc_security_group_ids = [aws_security_group.public_sg.id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   user_data = data.template_file.userdata.rendered
 
