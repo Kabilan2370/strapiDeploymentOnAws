@@ -98,12 +98,6 @@ resource "aws_route_table_association" "b" {
   route_table_id = aws_route_table.private_route2.id
 }
 
-resource "aws_db_subnet_group" "db_subnet" {
-  name       = "strapi-db-subnet"
-  subnet_ids = [aws_subnet.private_sub.id]
-}
-
-
 # aws security group
 resource "aws_security_group" "public_sg" {
   name                      = "public-sg"
@@ -167,28 +161,10 @@ resource "aws_security_group" "private_sg" {
 }
 
 -------------------------
-
-----------------------------
-# RDS PostgreSql
-resource "aws_db_instance" "postgresql" {
-
-  cluster_identifier      = "strapi-postgres"
-  engine                  = "postgresql"
-  engine-version          =  "15.3"
-  instance-class          = "db.t3.micro"
-  availability_zones      = ["us-east-1a", "us-east-1b", "us-east-1c"]
-  database_name           = "mydata"
-  master_username         = "strapi"
-  master_password         = "strapi6734!"
-  publicly_accessible     = true
-  skip_final_snapshot     = true
-  db_subnet_group_name    = aws_db_subnet_group.db_subnet.name
-  vpc_security_group_ids  = [aws_security_group.private_sg.id]
-}
-
 # create a s3 bucket
 resource "aws_s3_bucket" "strapi_bucket" {
   bucket = "strapi_s3_bucket_test"
+  acl    = "private"
 
   tags = {
     Name        = "My bucket"
@@ -248,6 +224,31 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   name = "strapi-ec2-profile"
   role = aws_iam_role.ec2_role.name
 }
+
+----------------------------
+resource "aws_db_subnet_group" "db_subnet" {
+  name       = "strapi-db-subnet"
+  subnet_ids = [aws_subnet.private_sub.id]
+}
+
+# RDS PostgreSql
+resource "aws_db_instance" "postgresql" {
+
+  cluster_identifier      = "strapi-postgres"
+  engine                  = "postgresql"
+  allocated_storage       = "
+  engine-version          =  "15.3"
+  instance-class          = "db.t3.micro"
+  availability_zones      = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  database_name           = "mydata"
+  master_username         = "strapi"
+  master_password         = "strapi6734!"
+  publicly_accessible     = true
+  skip_final_snapshot     = true
+  db_subnet_group_name    = aws_db_subnet_group.db_subnet.name
+  vpc_security_group_ids  = [aws_security_group.private_sg.id]
+}
+
 
 # user data values
 
