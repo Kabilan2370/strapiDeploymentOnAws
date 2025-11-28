@@ -15,7 +15,7 @@ sudo apt-get install -y nodejs git
 sudo npm install -g yarn pm2
 
 cd /opt
-sudo git clone https://github.com/Kabilan2370/strapi-aws-production.git strapi
+sudo git clone https://github.com/Kabilan2370/strapi-production-build.git strapi
 sudo chown -R ubuntu:ubuntu /opt/strapi
 cd /opt/strapi
 
@@ -31,9 +31,9 @@ AWS_REGION=us-east-1
 AWS_S3_BUCKET=${s3_bucket}
 EOF"
 
-# Install and build Strapi
+# Install Strapi
 sudo -u ubuntu npm install
-sudo -u ubuntu npm run build
+
 
 # Start Strapi with PM2
 sudo pm2 start npm --name "strapi" -- start
