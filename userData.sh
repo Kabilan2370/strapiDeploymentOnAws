@@ -29,6 +29,8 @@ DATABASE_USERNAME=${db_user}
 DATABASE_PASSWORD=${db_password}
 AWS_REGION=us-east-1
 AWS_S3_BUCKET=${s3_bucket}
+ADMIN_JWT_SECRET=9f1c2a3b4d5e6f7890abcdef1234567890abcdef1234567890abcdef12345678
+
 EOF"
 
 # Install Strapi
