@@ -15,7 +15,7 @@ sudo apt-get install -y nodejs git
 sudo npm install -g yarn pm2
 
 cd /opt
-sudo git clone https://github.com/Kabilan2370/strapi-production-build.git strapi
+sudo git clone https://github.com/Kabilan2370/my-strapi-app-Deployment.git strapi
 sudo chown -R ubuntu:ubuntu /opt/strapi
 cd /opt/strapi
 
