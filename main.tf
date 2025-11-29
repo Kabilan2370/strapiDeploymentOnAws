@@ -256,6 +256,7 @@ resource "aws_db_instance" "postgresql" {
   allocated_storage       = 20
   engine_version          =  "17.6"
   instance_class          = "db.t3.micro"
+  name                    = "strapi"
   username                = "strapi"
   password                = "strapi6734!"
   skip_final_snapshot     = true
@@ -275,7 +276,7 @@ data "template_file" "userdata" {
 
   vars = {
     db_host     = aws_db_instance.postgresql.address
-    db_name     = "strapidb"
+    db_name     = "strapi"
     db_user     = "strapi"
     db_password = "strapi6734!"
     s3_bucket   = aws_s3_bucket.strapi_bucket.bucket
