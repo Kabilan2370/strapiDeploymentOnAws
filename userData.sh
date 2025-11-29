@@ -20,7 +20,9 @@ sudo chown -R ubuntu:ubuntu /opt/strapi
 cd /opt/strapi
 
 
+
 # Environment variables for DB
+cd /opt/strapi
 sudo bash -c "cat <<EOF > .env
 DATABASE_CLIENT=postgres
 DATABASE_HOST=${db_host}
@@ -32,10 +34,16 @@ AWS_S3_BUCKET=${s3_bucket}
 ADMIN_JWT_SECRET=9f1c2a3b4d5e6f7890abcdef1234567890abcdef1234567890abcdef12345678
 
 EOF"
+sudo chown ubuntu:ubuntu .env
 
 # Install Strapi
+sudo -u ubuntu npm install --production
+sudo -u ubuntu npm install pg
 sudo -u ubuntu npm install @strapi/provider-upload-aws-s3
-sudo -u ubuntu npm install
+
+sudo -u ubuntu NODE_OPTIONS="--max_old_space_size=4096" npm run build
+
+
 
 
 # Start Strapi with PM2
