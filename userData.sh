@@ -13,6 +13,7 @@ sudo apt-get update -y
 sudo curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 sudo apt-get install -y nodejs git
 sudo npm install -g yarn pm2
+sudo apt-get install -y postgresql-client
 
 cd /opt
 sudo git clone https://github.com/Kabilan2370/my-strapi-app-Deployment.git strapi
