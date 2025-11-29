@@ -285,7 +285,7 @@ data "template_file" "userdata" {
 
 resource "aws_instance" "strapi-production" {
   ami                    = "ami-0ecb62995f68bb549"
-  instance_type          = "t3.micro"
+  instance_type          = "t3.medium"
   subnet_id              = aws_subnet.pub_sub.id
   key_name               = "Connection"
   vpc_security_group_ids = [aws_security_group.public_sg.id]
