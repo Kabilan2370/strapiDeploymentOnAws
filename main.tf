@@ -278,6 +278,7 @@ data "template_file" "userdata" {
     db_user     = "strapi"
     db_password = "strapi6734!"
     s3_bucket   = aws_s3_bucket.strapi_bucket.bucket
+    region      = "us-east-1"
   }
 }
 
