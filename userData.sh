@@ -32,6 +32,7 @@ AWS_S3_BUCKET=${s3_bucket}
 EOF"
 
 # Install Strapi
+sudo -u ubuntu npm install @strapi/provider-upload-aws-s3
 sudo -u ubuntu npm install
 
 
