@@ -37,7 +37,7 @@ DATABASE_HOST=${db_host}
 DATABASE_PORT=5432
 DATABASE_USERNAME=${db_user}
 DATABASE_PASSWORD=${db_password}
-DATABASE_NAME=strapi
+DATABASE_NAME=${db_name}
 
 AWS_REGION=us-east-1
 AWS_S3_BUCKET=${s3_bucket}
