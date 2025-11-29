@@ -23,7 +23,7 @@ cd /opt/strapi
 
 # Environment variables for DB
 cd /opt/strapi
-sudo bash -c "cat <<EOF > .env
+sudo bash -c 'cat <<EOF > .env
 HOST=0.0.0.0
 PORT=1337
 
@@ -41,17 +41,17 @@ DATABASE_NAME=strapi
 
 AWS_REGION=us-east-1
 AWS_S3_BUCKET=${s3_bucket}
-EOF"
+EOF'
 
-sudo chown ubuntu:ubuntu .env
+sudo chown ubuntu:ubuntu /opt/strapi/.env
 
 # Install Strapi
-sudo -u ubuntu npm install --production
+sudo -u ubuntu npm install
 sudo -u ubuntu npm install pg
 sudo -u ubuntu npm install @strapi/provider-upload-aws-s3
 
-sudo -u ubuntu NODE_OPTIONS="--max_old_space_size=4096" npm run build
-
+export NODE_OPTIONS="--max_old_space_size=4096"
+sudo -u ubuntu npm run build
 
 
 
