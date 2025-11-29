@@ -275,6 +275,7 @@ data "template_file" "userdata" {
 
   vars = {
     db_host     = aws_db_instance.postgresql.address
+    db_name     = "strapidb"
     db_user     = "strapi"
     db_password = "strapi6734!"
     s3_bucket   = aws_s3_bucket.strapi_bucket.bucket
