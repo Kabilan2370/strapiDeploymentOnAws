@@ -24,16 +24,25 @@ cd /opt/strapi
 # Environment variables for DB
 cd /opt/strapi
 sudo bash -c "cat <<EOF > .env
+HOST=0.0.0.0
+PORT=1337
+
+APP_KEYS=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex') + ',' + require('crypto').randomBytes(32).toString('hex') + ',' + require('crypto').randomBytes(32).toString('hex') + ',' + require('crypto').randomBytes(32).toString('hex'))")
+API_TOKEN_SALT=$(node -e "console.log(require('crypto').randomBytes(16).toString('hex'))")
+ADMIN_JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+
 DATABASE_CLIENT=postgres
 DATABASE_HOST=${db_host}
 DATABASE_PORT=5432
 DATABASE_USERNAME=${db_user}
 DATABASE_PASSWORD=${db_password}
+DATABASE_NAME=strapi
+
 AWS_REGION=us-east-1
 AWS_S3_BUCKET=${s3_bucket}
-ADMIN_JWT_SECRET=9f1c2a3b4d5e6f7890abcdef1234567890abcdef1234567890abcdef12345678
-
 EOF"
+
 sudo chown ubuntu:ubuntu .env
 
 # Install Strapi
