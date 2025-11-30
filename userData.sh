@@ -18,7 +18,6 @@ sudo apt-get install -y postgresql-client
 cd /opt
 sudo git clone https://github.com/Kabilan2370/my-strapi-app-Deployment.git strapi
 sudo chown -R ubuntu:ubuntu /opt/strapi
-cd /opt/strapi
 
 
 
@@ -51,10 +50,7 @@ sudo -u ubuntu npm install
 sudo -u ubuntu npm install pg
 sudo -u ubuntu npm install @strapi/provider-upload-aws-s3
 
-export NODE_OPTIONS="--max_old_space_size=4096"
 sudo -u ubuntu npm run build
-
-
 
 # Start Strapi with PM2
 sudo pm2 start npm --name "strapi" -- start
