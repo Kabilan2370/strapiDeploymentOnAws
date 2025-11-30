@@ -171,7 +171,7 @@ resource "aws_security_group" "private_sg" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks  = ["10.0.2.0/24"]
+    cidr_blocks  = ["10.0.2.0/20"]
   }
 
   tags = {
@@ -256,7 +256,7 @@ resource "aws_db_instance" "postgresql" {
   allocated_storage       = 20
   engine_version          =  "17.6"
   instance_class          = "db.t3.micro"
-  name                    = "strapi"
+  db_name                    = "strapi"
   username                = "strapi"
   password                = "strapi6734!"
   skip_final_snapshot     = true
