@@ -28,10 +28,10 @@ sudo bash -c 'cat <<EOF > .env
 HOST=0.0.0.0
 PORT=1337
 
-APP_KEYS=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex') + ',' + require('crypto').randomBytes(32).toString('hex') + ',' + require('crypto').randomBytes(32).toString('hex') + ',' + require('crypto').randomBytes(32).toString('hex'))")
-API_TOKEN_SALT=$(node -e "console.log(require('crypto').randomBytes(16).toString('hex'))")
-ADMIN_JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
-JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+APP_KEYS=$(openssl rand -base64 32)
+API_TOKEN_SALT=$(openssl rand -base64 32)
+ADMIN_JWT_SECRET=$(openssl rand -base64 32)
+JWT_SECRET=$(openssl rand -base64 32)
 
 DATABASE_CLIENT=postgres
 DATABASE_HOST=${db_host}
