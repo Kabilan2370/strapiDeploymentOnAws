@@ -9,8 +9,8 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 sudo apt-get update -y
 
-sudo curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-sudo apt-get install -y nodejs git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
 sudo npm install -g yarn pm2
 sudo apt-get install -y postgresql-client
 
